@@ -115,14 +115,20 @@ def count_dollars(total):
     >>> check(SOURCE_FILE, 'count_dollars', ['While', 'For'])
     True
     """
-    def helper(total, bill):
-        if total == 0:
-            return 1
-        if total < 0 or bill is None:
-            return 0
-        return helper(total - bill, bill) + helper(total, next_smaller_dollar(bill))
-
-    return helper(total, 100)
+    def get_largest_bill(new_total, bill=100):
+        if new_total >= bill:
+            return bill
+        else:
+            return get_largest_bill(new_total, next_smaller_dollar(bill))
+    
+    def helper(total, get_largest_bill):
+              
+        
+    return count_dollars(total) + count_dollars()
+        
+        
+        
+        
 
 
 
