@@ -185,9 +185,16 @@ def autocorrect(typed_word: str, word_list: list[str], diff_function, limit: int
     'testing'
     """
     # BEGIN PROBLEM 5
-    "*** YOUR CODE HERE ***"
-    # END PROBLEM 5
+    if typed_word in word_list:
+        return typed_word
 
+    closest_word = min(word_list, key=lambda w: diff_function(typed_word, w, limit))
+    smallest_diff = diff_function(typed_word, closest_word, limit)
+
+    if smallest_diff > limit:
+        return typed_word
+    return closest_word
+    # END PROBLEM 5
 
 def furry_fixes(typed: str, source: str, limit: int) -> int:
     """A diff function for autocorrect that determines how many letters
@@ -212,8 +219,17 @@ def furry_fixes(typed: str, source: str, limit: int) -> int:
     5
     """
     # BEGIN PROBLEM 6
-    assert False, 'Remove this line'
+    if limit < 0:
+        return limit + 1
+    if not typed or not source:
+        return abs(len(typed) - len(source))
+    
+    if typed[0] == source[0]:
+        return furry_fixes(typed[1:], source[1:], limit)
+    else:
+        return 1 + furry_fixes(typed[1:], source[1:], limit - 1)
     # END PROBLEM 6
+
 
 
 def minimum_mewtations(typed: str, source: str, limit: int) -> int:
@@ -233,22 +249,23 @@ def minimum_mewtations(typed: str, source: str, limit: int) -> int:
     >>> minimum_mewtations("ckiteus", "kittens", big_limit) # ckiteus -> kiteus -> kitteus -> kittens
     3
     """
-    assert False, 'Remove this line'
-    if ___________: # Base cases should go here, you may add more base cases as needed.
-        # BEGIN
-        "*** YOUR CODE HERE ***"
-        # END
-    # Recursive cases should go below here
-    if ___________: # Feel free to remove or add additional cases
-        # BEGIN
-        "*** YOUR CODE HERE ***"
-        # END
-    else:
-        add = ... # Fill in these lines
-        remove = ...
-        substitute = ...
-        # BEGIN
-        "*** YOUR CODE HERE ***"
+    # Base cases
+    if limit < 0:
+        return limit + 1
+    if not typed or not source:
+        return abs(len(typed) - len(source))
+
+    # If first characters match, no edit needed for them
+    if typed[0] == source[0]:
+        return minimum_mewtations(typed[1:], source[1:], limit)
+
+    # Otherwise, try add, remove, and substitute
+    add = 1 + minimum_mewtations(typed, source[1:], limit - 1)
+    remove = 1 + minimum_mewtations(typed[1:], source, limit - 1)
+    substitute = 1 + minimum_mewtations(typed[1:], source[1:], limit - 1)
+
+    return min(add, remove, substitute)
+
         # END
 
 
@@ -294,7 +311,16 @@ def report_progress(typed: list[str], source: list[str], user_id: int, upload) -
     0.2
     """
     # BEGIN PROBLEM 8
-    "*** YOUR CODE HERE ***"
+    correct_count = 0
+    for i in range(len(typed)):
+        if typed[i] == source[i]:
+            correct_count += 1
+        else:
+            break
+
+    progress = correct_count / len(source)
+    upload({'id': user_id, 'progress': progress})
+    return progress
     # END PROBLEM 8
 
 
@@ -318,7 +344,13 @@ def time_per_word(words: list[str], timestamps_per_player: list[list[int]]) -> d
     """
     tpp = timestamps_per_player  # A shorter name (for convenience)
     # BEGIN PROBLEM 9
-    times = []  # You may remove this line
+    times = []
+    for player_timestamps in tpp:
+        player_times = []
+        for i in range(1, len(player_timestamps)):
+            duration = player_timestamps[i] - player_timestamps[i - 1]
+            player_times.append(duration)
+        times.append(player_times)
     # END PROBLEM 9
     return {'words': words, 'times': times}
 
@@ -346,7 +378,19 @@ def fastest_words(words_and_times: dict) -> list[list[str]]:
     player_indices = range(len(times))  # contains an *index* for each player
     word_indices = range(len(words))    # contains an *index* for each word
     # BEGIN PROBLEM 10
-    "*** YOUR CODE HERE ***"
+    fastest = [[] for _ in player_indices]
+
+    for j in word_indices:
+        fastest_player = 0
+        fastest_time = get_time(times, 0, j)
+        for i in player_indices:
+            current_time = get_time(times, i, j)
+            if current_time < fastest_time:
+                fastest_time = current_time
+                fastest_player = i
+        fastest[fastest_player].append(words[j])
+
+    return fastest
     # END PROBLEM 10
 
 

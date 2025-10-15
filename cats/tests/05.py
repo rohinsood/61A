@@ -17,17 +17,14 @@ test = {
           >>> autocorrect("wrod", ["word", "rod"], first_diff, 1)
           'word'
           >>> autocorrect("inside", ["idea", "inside"], first_diff, 0.5)
-          161d6d2b906d9ba5493f1e1e2cb3825a
-          # locked
+          'inside'
           >>> autocorrect("inside", ["idea", "insider"], first_diff, 0.5)
-          c23026f3648b2ad12a836ba6014a3a30
-          # locked
+          'idea'
           >>> autocorrect("outside", ["idea", "insider"], first_diff, 0.5)
-          fb0a4fcea72813e3fdba19854ca5dfb6
-          # locked
+          'outside'
           """,
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'multiline': False
         },
         {
